@@ -1,0 +1,14 @@
+const Color = {
+  orange: "#D88C26",
+  white: "#fff",
+  blue: "#00425A",
+  black: "#010000",
+  lightBlack: "#393E46",
+  lightGray: "#eee",
+  midGray: "#ddd",
+  gray: "#787878",
+  red: "#E21818",
+  green: "#1A5D1A",
+};
+
+export default Color;

@@ -1,0 +1,237 @@
+<FlatList
+        data={measured}
+        renderItem={({ item, index }) => {
+          const isEnd = index === measured.length - 1;
+          return (
+            <View>
+              <View style={{ paddingLeft: 20, paddingRight: 20 }}>
+                <View>
+                  <TouchableOpacity
+                    style={
+                      item.jobState === "complete"
+                        ? styles.newBtn
+                        : styles.updateBtn
+                    }
+                    onPress={() => {
+                      passDataToModal(item);
+                    }}
+                  >
+                    <Text style={styles.bgTxt}>
+                      {item.jobState === "complete" ? "New" : " Update"}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={
+                      daysLeft(item) <= 0 && item.jobState === "pending"
+                        ? styles.completeBtn
+                        : { display: "none" }
+                    }
+                    onPress={() => {
+                      completeHandler(item);
+                    }}
+                  >
+                    <Text style={styles.bgTxt}>Complete?</Text>
+                  </TouchableOpacity>
+
+                  {/* _____________________Passing the Data to the modal__________________ */}
+                  <TouchableOpacity
+                    onPress={() => {
+                      measuredDetails(item);
+                    }}
+                  >
+                    <Card>
+                      <View
+                        style={{
+                          ...globalStyles.twoColum,
+                          justifyContent: "flex-start",
+                        }}
+                      >
+                        <Image
+                          source={
+                            !item.image
+                              ? require("../../assets/noImage.png")
+                              : { uri: item.image }
+                          }
+                          style={{
+                            width: 100,
+                            height: 100,
+                            resizeMode: "cover",
+                          }}
+                        />
+
+                        <View style={{ flexGrow: 1 }}>
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              fontWeight: "bold",
+                              color: Color.blue,
+                              fontFamily: "roboto-regular",
+                            }}
+                          >
+                            {item.customerName}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 16,
+                              fontWeight: "bold",
+                              color: Color.blue,
+                              fontFamily: "roboto-regular",
+                            }}
+                          >
+                            {item.phoneNumber}
+                          </Text>
+
+                          <View
+                            style={{ ...globalStyles.hrLine, width: "100%" }}
+                          />
+                          <Text
+                            style={
+                              daysLeft(item) <= 0 && item.jobState === "pending"
+                                ? { display: "none" }
+                                : { display: "flex" }
+                            }
+                          >
+                            {`${
+                              item.jobState === "complete"
+                                ? "Click New to book again"
+                                : moment(item.deadLineDate?.toDate()).format(
+                                    "LL"
+                                  )
+                            }`}
+                          </Text>
+
+                          <Text
+                            style={
+                              item.jobState === "complete"
+                                ? { display: "none" }
+                                : daysLeft(item) <= 0
+                                ? { color: "red", fontWeight: "bold" }
+                                : "" || daysLeft(item) <= 2
+                                ? { color: "green", fontWeight: "bold" }
+                                : ""
+                            }
+                          >{`${
+                            daysLeft(item) <= 0 ? 0 : daysLeft(item)
+                          } Days Left`}</Text>
+                        </View>
+                      </View>
+                    </Card>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              {isEnd && (
+                <View style={{ height: 70 }}>{/* <Text>The End</Text> */}</View>
+              )}
+            </View>
+          );
+        }}
+        ListEmptyComponent={
+          <Text style={styles.noItemTxt}> No Items found</Text>
+        }
+        ListHeaderComponent={
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 12,
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginHorizontal: 20,
+            }}
+          >
+            <TextInput
+              clearButtonMode="always"
+              style={{
+                borderColor: Color.midGray,
+                borderWidth: 1,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                marginVertical: 5,
+                borderRadius: 8,
+                flexGrow: 1,
+              }}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(query) => handeleSearch(query)}
+              value={search}
+              placeholder="Search"
+            />
+            <Text
+              style={{
+                textAlign: "right",
+                fontSize: 18,
+                color: Color.blue,
+              }}
+            >
+              Total: <Text style={{ fontWeight: "bold" }}>{noOfJobs} </Text>
+            </Text>
+          </View>
+        }
+        ListFooterComponent={() => (
+          <MeasurementModal
+            visible={openModal}
+            onClose={onClose}
+            onSubmit={handleSubmit}
+            mesurement={modalData}
+            isEdith={isEdith}
+            isNew={isNew}
+            style={{ backgroundColor: "red", height: 70, width: 60 }}
+          />
+        )}
+      />
+      <View style={{}}></View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  updateBtn: {
+    backgroundColor: Color.orange,
+    borderBottomRightRadius: 5,
+    borderTopLeftRadius: 5,
+    width: "25%",
+    position: "absolute",
+    zIndex: 1,
+    bottom: 10,
+    right: 4,
+  },
+  newBtn: {
+    backgroundColor: Color.blue,
+    borderBottomRightRadius: 5,
+    borderTopLeftRadius: 5,
+    width: "25%",
+    position: "absolute",
+    zIndex: 1,
+    bottom: 10,
+    right: 4,
+  },
+  bgTxt: {
+    fontWeight: "bold",
+    fontSize: 14,
+    color: Color.white,
+    textAlign: "center",
+    padding: 3,
+  },
+  noItemTxt: {
+    flex: 1,
+    height: "100%",
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    fontSize: 30,
+  },
+  completeBtn: {
+    backgroundColor: Color.green,
+    borderTopRightRadius: 5,
+    borderTopLeftRadius: 5,
+    width: "25%",
+    position: "absolute",
+    zIndex: 1,
+    bottom: 10,
+    right: 80,
+  },
+});
