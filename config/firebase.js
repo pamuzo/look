@@ -1,21 +1,24 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { initializeFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-
-import {
-  initializeAuth,
-  getAuth,
-  getReactNativePersistence,
-} from "firebase/auth";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  APP_ID,
+  AUTH_DOMAIN,
+  PRODUCT_ID,
+  STORAGE_BUCKET,
+  MESSAGING_SENDER_ID,
+  API_KEY,
+} from "@env";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC2IpcyFHXacbviIhFBog_xfitIJPdyXx0",
-  authDomain: "look-257ec.firebaseapp.com",
-  projectId: "look-257ec",
-  storageBucket: "look-257ec.appspot.com",
-  messagingSenderId: "799250744651",
-  appId: "1:799250744651:web:e75146d29cf2cf9e1354ce",
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  projectId: PRODUCT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID,
 };
 
 // Initialize Firebase
